@@ -1,47 +1,77 @@
-`use strict`;
+/**
+ * Створи картки з товарами на основі масиву products,
+ * приклад картки https://prnt.sc/KmgDlzqOIA3M
+ *
+ * Реалізуй делегування подій на колекції карток
+ * Після кліку на картку повинно з'являтись модальне вікно
+ * з детальною інформацією про продукт,
+ * приклад модального вікна https://prnt.sc/vWNoCeZcw7ii
+ *
+ * Для реалізації модального вікна використай
+ * бібліотеку basicLightbox (https://github.com/electerious/basicLightbox)
+ */
 
+const products = [
+  {
+    id: 1,
+    img: 'https://www.vodafone.ua/shop/media/wysiwyg/novosti/Capture_1_large.JPG',
+    name: 'Monitor',
+    price: 3000,
+    description: '23-inch monitor with Full HD resolution.',
+  },
+  {
+    id: 2,
+    img: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTzWqRMI3HQiDfICHAmbArmaP4uOOIjfz0sDITv0dfkpb0mbbgX',
+    name: 'Laptop',
+    price: 20000,
+    description:
+      'Lightweight and powerful laptop with a 15-inch display and SSD.',
+  },
+  {
+    id: 3,
+    img: 'https://cdn.27.ua/799/66/39/6841913_1.jpeg',
+    name: 'Smartphone',
+    price: 8000,
+    description: 'Equipped with a triple camera and a multi-core processor.',
+  },
+  {
+    id: 4,
+    img: 'https://cdn.27.ua/799/b6/16/4371990_1.jpeg',
+    name: 'Tablet',
+    price: 12000,
+    description: '10-inch tablet with high performance and a Retina display.',
+  },
+];
 
-const getUserNames = users => users.map(user => user.name);
+const container = document.querySelector('.products');
+container.insertAdjacentHTML('beforeend', createCardsMarkup(products));
 
+container.addEventListener('click', handlerProductClick);
 
+function createCardsMarkup(cards) {
+  return cards
+    .map(card => {
+      return `<li class="item js-product-item" data-id="${card.id}">
+            <img
+              src="${card.img}"
+              alt="${card.name}: ${card.description}"
+            />
+            <div>
+             <h3>${card.name}</h3>
+              <p>Price: ${card.price} uah</p>
+            </div>
+             
+          </li>`;
+    })
+    .join('');
+}
 
-console.log(
-    getUserNames([
-    {
-      name: "Moore Hensley",
-      email: "moorehensley@indexia.com",
-      balance: 2811
-    },
-    {
-      name: "Sharlene Bush",
-      email: "sharlenebush@tubesys.com",
-      balance: 3821
-    },
-    {
-      name: "Ross Vazquez",
-      email: "rossvazquez@xinware.com",
-      balance: 3793
-    },
-    {
-      name: "Elma Head",
-      email: "elmahead@omatom.com",
-      balance: 2278
-    },
-    {
-      name: "Carey Barr",
-      email: "careybarr@nurali.com",
-      balance: 3951
-    },
-    {
-      name: "Blackburn Dotson",
-      email: "blackburndotson@furnigeer.com",
-      balance: 1498
-    },
-    {
-      name: "Sheree Anthony",
-      email: "shereeanthony@kog.com",
-      balance: 2764
-    },
-  ])
-  ); // ["Moore Hensley", "Sharlene Bush", "Ross Vazquez", "Elma Head", "Carey Barr", "Blackburn Dotson", "Sheree Anthony"]
-  
+function handlerProductClick(event) {
+  // перевірка щоб не зчитувало кліки просто з контейнера за медами картки
+  if (event.target === event.currentTarget) {
+    return;
+  }
+  // не важливо на яку глибину картки буде клік:
+  const currentProduct = event.target.closest('.js-product-item');
+  console.log(' currentProduct:', currentProduct);
+}
