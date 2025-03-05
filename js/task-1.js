@@ -42,10 +42,14 @@ const products = [
     description: '10-inch tablet with high performance and a Retina display.',
   },
 ];
-
+const loader = document.querySelector('.loader-wrapper');
+setTimeout(() => {
+  loader.classList.add('is-hidden');
+}, 500);
+// Render
 const container = document.querySelector('.products');
 container.insertAdjacentHTML('beforeend', createCardsMarkup(products));
-
+// Delegation
 container.addEventListener('click', handlerProductClick);
 
 function createCardsMarkup(cards) {
@@ -71,7 +75,27 @@ function handlerProductClick(event) {
   if (event.target === event.currentTarget) {
     return;
   }
-  // не важливо на яку глибину картки буде клік:
+  // не важливо на яку глибину картки буде клік, через closest отримуємо той елемент по якому клікнули
   const currentProduct = event.target.closest('.js-product-item');
-  console.log(' currentProduct:', currentProduct);
+  console.log(' currentProduct:', currentProduct.dataset.id);
+
+  // отримали посилання на li, забрали в неї id
+  const id = Number(currentProduct.dataset.id);
+
+  // шукає по цьому id в масиві нашу картку:
+  const product = products.find(product => {
+    return product.id === id;
+  });
+  console.log(product);
+
+  const instance = basicLightbox.create(`
+      <div class="modal">
+        <img src="${product.img}" alt="${product.desc}" />
+        <h3>${product.name}</h3>
+        <h4>${product.price}</h4>
+        <p>${product.description}</p>
+      </div>`);
+
+  // щоб модалка відкрилася
+  instance.show();
 }
